@@ -3,13 +3,19 @@ import random
 import string
 from urllib.parse import urlparse
 from collections import Counter
-        
+
+
+# A function when called creates a JSON file with an empty hashmap/dictionary within it.
+def create_file():
+    with open("data.json", "w") as file:
+        json.dump({}, file)
+       
 # A function which return's the dictionary/hashmap within the file          
 def get_data():
     with open('data.json', 'r') as file:
         data = json.load(file)
         return data
-    
+   
 # A function that generate's a random 11 ASCII characters            
 def get_hash(url):
     ascii_chars = string.ascii_letters + string.digits
@@ -23,7 +29,7 @@ def is_valid_url(url):
         return all([result.scheme, result.netloc])
     except ValueError:
         return False
-            
+           
 def shorten_url(identifier):
     return "https://pem.com/" + str(identifier)
 
@@ -36,7 +42,7 @@ sentinel_value = "a";
 
 #making a while loop to make the program keep on running until the user enter's q later on
 while sentinel_value != "q":
-    
+   
     #asking the user what type of link they want to input
     url_input = input("What type of link are you going to input(Input l for Long Url | Input s for Short Url): ").upper()
 
@@ -44,22 +50,22 @@ while sentinel_value != "q":
     if url_input != "S" and url_input != "L":
         while url_input != "S" and url_input != "L":
             url_input = input("You did not input l or s. Please Input l for Long Url or s for Short Url: ").upper()
-            
-    
+           
+   
 
     #if the user enter's l, run the code for the long url
     if url_input == 'L':
         #ask the user input a long url
         original_url = input("Enter a long url: ")
-        
+       
         #loading all the data of the file in data variable    
         data = get_data()
-        
+       
         #checking if the url is valid or not, if it's not, ask the user input a valid url
         if not is_valid_url(original_url):
             while not is_valid_url(original_url):
                 original_url = input("Please enter a valid url: ")
-            
+           
         #checking if the url is already in the file, if it is, inform the user that the Long URL has already been converted.        
         if original_url in data.values():
                 print("This Long Url has already been converted into a short URL")
@@ -70,15 +76,28 @@ while sentinel_value != "q":
                 data[identifier] =  original_url
                 json.dump(data, file)
                 print("The shortened version is", shorten_url(identifier))
-    
-    
+   
+    #if the user inputs s on the first input question, do the code for the short url
+    if url_input == 'S':
+        #ask the user to input a short url
+        short_url = input("Enter a short url: ")
+       
+        #split the url with the unique identifier attached with it  
+        hash_value = short_url.split("https://pem.com/")[1]
+       
+        #storing everything within the file in a variable named data    
+        data = get_data()
+       
+        #provide the original url to short url provided
+        print("the original link is: ",data[hash_value])
+   
     #if there is 1 or 0 url provided up till now, print url instead of urls
     if len(get_data()) == 1 or len(get_data()) == 0:
         print("There have been", len(get_data()), "url shortened so far")
     #if there are more than 1 url, start writing it as urls    
     else:
         print("There have been", len(get_data()), "urls shortened so far")
-            
+           
 
     #printing everything inside the file right now
     print("Here is everything inside the file right now: ", get_data())
@@ -86,9 +105,3 @@ while sentinel_value != "q":
     sentinel_value = input("If you would like to quit press q, if you want to keep using the application press any other key: ")
 #Thanking the user for using our application    
 print("Thank you for using our application!")
-
-
-
-            
-
-
