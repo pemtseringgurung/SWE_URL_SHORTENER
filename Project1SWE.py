@@ -2,7 +2,6 @@ import json
 import random
 import string
 from urllib.parse import urlparse
-from collections import Counter
 
 
 # A function when called creates a JSON file with an empty hashmap/dictionary within it.
